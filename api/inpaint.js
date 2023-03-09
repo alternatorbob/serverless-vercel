@@ -1,10 +1,9 @@
-import pkg from 'formidable';
+import pkg from "formidable";
 const { IncomingForm } = pkg;
 const API_HOST = process.env.REPLICATE_API_HOST || "https://api.replicate.com";
-const API_KEY = process.env.REPLICATE_API_TOKEN
+const API_KEY = process.env.REPLICATE_API_TOKEN;
 
 export default async (req, res) => {
-
     if (req.method !== "POST") {
         return;
     }
@@ -16,7 +15,6 @@ export default async (req, res) => {
             resolve({ fields, files });
         });
     });
-
 
     // const base64 = await readAsDataURL(data.files.image);
 
@@ -37,12 +35,12 @@ export default async (req, res) => {
 
         body: JSON.stringify({
             input,
-            version: "be04660a5b93ef2aff61e3668dedb4cbeb14941e62a3fd5998364a32d613e35e",
+            version:
+                "be04660a5b93ef2aff61e3668dedb4cbeb14941e62a3fd5998364a32d613e35e",
         }),
     });
 
     if (response.status !== 201) {
-
         let error = await response.text();
         res.end(JSON.stringify({ detail: error }));
         return;
@@ -51,7 +49,7 @@ export default async (req, res) => {
     const prediction = await response.json();
     res.statusCode = 201;
     res.end(JSON.stringify(prediction));
-}
+};
 
 function readAsDataURL(file) {
     return new Promise((resolve, reject) => {

@@ -1,7 +1,9 @@
 import "./style.css";
-import { inPaint } from "./replicate";
+import "./css/ui.css";
+import { inPaint } from "./js/replicate";
+import { getDetections } from "./js/faceDetection";
 
-const canvas = document.querySelector("#canvas");
+const canvas = document.querySelector("#image--canvas");
 const imgResults = document.querySelector("#result");
 const ctx = canvas.getContext("2d");
 
@@ -18,37 +20,41 @@ imageInput.onchange = (e) => {
 
     reader.onload = (e) => {
         const img = new Image();
-        img.onload = () => {
-            const min = Math.min(img.width, img.height);
-            canvas.width = min;
-            canvas.height = min;
+        img.onload = async () => {
+            await getDetections(file);
+
+            // const min = Math.min(img.width, img.height);
+            canvas.width = img.width;
+            canvas.height = img.height;
+            // canvas.width = min;
+            // canvas.height = min;
 
             ctx.save();
 
             const ratio = img.width / img.height;
 
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height / ratio);
+            // ctx.drawImage(img, 0, 0, canvas.width, canvas.height / ratio);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
             canvas64 = canvas.toDataURL();
 
             // force clear canvas by resizing it
             // canvas.width = canvas.width;
-
             // ctx.fillStyle = "white";
             // ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.beginPath();
-            let radius = canvas.width * 0.3;
-            ctx.arc(
-                canvas.width / 2,
-                canvas.height / 2,
-                radius,
-                0,
-                2 * Math.PI
-            );
-            ctx.fillStyle = "black";
-            ctx.fill();
-            ctx.restore();
+
+            // ctx.beginPath();
+            // let radius = canvas.width * 0.4;
+            // ctx.arc(
+            //     canvas.width / 2,
+            //     canvas.height / 2,
+            //     radius,
+            //     0,
+            //     2 * Math.PI
+            // );
+            // ctx.fillStyle = "black";
+            // ctx.fill();
+            // ctx.restore();
 
             mask64 = canvas.toDataURL();
         };

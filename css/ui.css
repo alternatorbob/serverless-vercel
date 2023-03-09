@@ -1,0 +1,23 @@
+#photo--input--container {
+    max-width: 80vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+#image--canvas {
+    position: relative;
+    max-width: 100%;
+}
+#detections--canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-width: 100%;
+}
+
+.hidden {
+    display: none;
+}
