@@ -13,6 +13,7 @@ function start() {
 }
 
 export async function getDetections(img) {
+    let myPrompt;
     const image = await faceapi.bufferToImage(img);
     const detectionsCanvas = createDetectionsCanvas(image);
     const displaySize = { width: image.width, height: image.height };
@@ -27,8 +28,6 @@ export async function getDetections(img) {
 
     resizedDetections.forEach((result) => {
         const { age, gender } = result;
-        console.log(age, gender);
-
         const box = result.detection.box;
 
         const drawBox = new faceapi.draw.DrawBox(box, {
@@ -42,7 +41,12 @@ export async function getDetections(img) {
 
         const points = result.landmarks.positions;
         drawMask(detectionsCanvas, points);
+        createMaskCanvas(image, points);
+
+        myPrompt = `A ${gender} around ${age} of age`;
     });
+
+    return myPrompt;
 }
 
 function drawMask(canvas, points) {
@@ -59,6 +63,33 @@ function drawMask(canvas, points) {
     });
     ctx.closePath();
     ctx.fill();
+}
+
+function createMaskCanvas(img, points) {
+    const container = document.querySelector("#photo--input--container");
+    let pointIndexes = pushValues(17, 26).concat(pushValues(16, 0));
+
+    const maskCanvas = document.createElement("canvas");
+    maskCanvas.id = "mask--canvas";
+    maskCanvas.width = img.width;
+    maskCanvas.height = img.height;
+    maskCanvas.classList.add("hidden");
+    const ctx = maskCanvas.getContext("2d");
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.moveTo(points[0]._x, points[0]._y);
+    pointIndexes.forEach((index) => {
+        const { x, y } = points[index];
+        ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.fill();
+
+    container.append(maskCanvas);
 }
 
 function createDetectionsCanvas(image) {

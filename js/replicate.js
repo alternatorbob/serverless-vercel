@@ -1,9 +1,9 @@
 import { delay } from "/js/utils";
-export async function inPaint(canvas64, mask64, progressCB) {
+export async function inPaint(canvas64, mask64, prompt, progressCB) {
     const formData = new FormData();
     formData.append("image", canvas64);
     formData.append("mask", mask64);
-    formData.append("prompt", "a female in her 30s");
+    formData.append("prompt", prompt);
     // Post via axios or other transport method
     // fetch post formdata
     const { id } = await fetch("/api/inpaint", {

@@ -10,7 +10,7 @@ const ctx = canvas.getContext("2d");
 const form = document.querySelector("#form");
 
 const imageInput = form.querySelector('input[type="file"]');
-let canvas64, mask64;
+let canvas64, mask64, myPrompt;
 
 imageInput.onchange = (e) => {
     const file = e.target.files[0];
@@ -21,22 +21,19 @@ imageInput.onchange = (e) => {
     reader.onload = (e) => {
         const img = new Image();
         img.onload = async () => {
-            await getDetections(file);
-
             // const min = Math.min(img.width, img.height);
             canvas.width = img.width;
             canvas.height = img.height;
             // canvas.width = min;
             // canvas.height = min;
-
             ctx.save();
 
             const ratio = img.width / img.height;
-
             // ctx.drawImage(img, 0, 0, canvas.width, canvas.height / ratio);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
             canvas64 = canvas.toDataURL();
+
+            myPrompt = await getDetections(file);
 
             // force clear canvas by resizing it
             // canvas.width = canvas.width;
@@ -55,8 +52,8 @@ imageInput.onchange = (e) => {
             // ctx.fillStyle = "black";
             // ctx.fill();
             // ctx.restore();
-
-            mask64 = canvas.toDataURL();
+            const maskCanvas = document.querySelector("#mask--canvas");
+            mask64 = maskCanvas.toDataURL();
         };
         img.src = e.target.result;
     };
@@ -71,7 +68,7 @@ form.onsubmit = async (e) => {
     // create formdata
     // canvas to file
 
-    const output = await inPaint(canvas64, mask64, (value) => {
+    const output = await inPaint(canvas64, mask64, myPrompt, (value) => {
         console.log("progression:", value);
     });
 
