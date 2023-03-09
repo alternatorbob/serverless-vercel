@@ -42,8 +42,9 @@ export async function getDetections(img) {
         const points = result.landmarks.positions;
         drawMask(detectionsCanvas, points);
         createMaskCanvas(image, points);
-
-        myPrompt = `A ${gender} around ${age} of age`;
+        myPrompt = "A man's face, looking happy, around 30 years old";
+        // myPrompt = `A ${gender} face`;
+        //  around ${Math.round(age)} of age
     });
 
     return myPrompt;

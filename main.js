@@ -68,6 +68,8 @@ form.onsubmit = async (e) => {
     // create formdata
     // canvas to file
 
+    console.log("Prompt: ", myPrompt);
+
     const output = await inPaint(canvas64, mask64, myPrompt, (value) => {
         console.log("progression:", value);
     });
