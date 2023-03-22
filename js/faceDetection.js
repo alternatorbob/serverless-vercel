@@ -1,5 +1,10 @@
 import * as faceapi from "face-api.js";
-import { highlightPoints, pushValues } from "./utils";
+import { highlightPoints } from "./utils";
+import {
+    drawMask,
+    createMaskCanvas,
+    createDetectionsCanvas,
+} from "./drawUtils";
 
 Promise.all([
     faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
@@ -35,69 +40,63 @@ export async function getDetections(img) {
         });
         drawBox.draw(detectionsCanvas);
 
-        // faceapi.draw.drawFaceLandmarks(detectionsCanvas, result, {
-        //     drawLines: true,
-        // });
+        faceapi.draw.drawFaceLandmarks(detectionsCanvas, result, {
+            drawLines: true,
+        });
 
+        //nose = 27-30-35
         const points = result.landmarks.positions;
+
+        /*
+        //brow left
+        //brow left
+        highlightPoints(detectionsCanvas, points[17]);
+        highlightPoints(detectionsCanvas, points[21]);
+
+        //brow right
+        highlightPoints(detectionsCanvas, points[22]);
+        highlightPoints(detectionsCanvas, points[26]);
+
+        //nose top
+        highlightPoints(detectionsCanvas, points[27]);
+        // highlightPoints(detectionsCanvas, points[35]);
+
+        //left eye outer
+        highlightPoints(detectionsCanvas, points[36]);
+        //left eye center
+        highlightPoints(detectionsCanvas, points[38]);
+        
+        //righ eye outer
+        highlightPoints(detectionsCanvas, points[45]);
+        //righ eye middle
+        highlightPoints(detectionsCanvas, points[44]);
+
+        //mouth left
+        highlightPoints(detectionsCanvas, points[60]);
+        //mouth right
+        highlightPoints(detectionsCanvas, points[64]);
+        //mout middle middle
+        highlightPoints(detectionsCanvas, points[66]);
+        //mouth middle bottom
+        highlightPoints(detectionsCanvas, points[57]);
+        */
+
         drawMask(detectionsCanvas, points);
         createMaskCanvas(image, points);
-        myPrompt = "A man's face, looking happy, around 30 years old";
-        // myPrompt = `A ${gender} face`;
-        //  around ${Math.round(age)} of age
+
+        myPrompt =
+            gender === "male"
+                ? `A man's face, is smiling, eyes are open, he`
+                : `A woman's face, is smiling, eyes are open, she`;
+
+        myPrompt += ` is around ${Math.round(
+            age
+        )} years old, detailed faces, highres, RAW photo 8k uhd, dslr`;
+
+        // myPrompt = gender === "male" ? `A man's face` : `A woman's face`;
+
+        console.log(myPrompt);
     });
 
     return myPrompt;
-}
-
-function drawMask(canvas, points) {
-    const ctx = canvas.getContext("2d");
-    let pointIndexes = pushValues(17, 26).concat(pushValues(16, 0));
-    console.log(pointIndexes);
-
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.moveTo(points[0]._x, points[0]._y);
-    pointIndexes.forEach((index) => {
-        const { x, y } = points[index];
-        ctx.lineTo(x, y);
-    });
-    ctx.closePath();
-    ctx.fill();
-}
-
-function createMaskCanvas(img, points) {
-    const container = document.querySelector("#photo--input--container");
-    let pointIndexes = pushValues(17, 26).concat(pushValues(16, 0));
-
-    const maskCanvas = document.createElement("canvas");
-    maskCanvas.id = "mask--canvas";
-    maskCanvas.width = img.width;
-    maskCanvas.height = img.height;
-    maskCanvas.classList.add("hidden");
-    const ctx = maskCanvas.getContext("2d");
-
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
-
-    ctx.fillStyle = "black";
-    ctx.beginPath();
-    ctx.moveTo(points[0]._x, points[0]._y);
-    pointIndexes.forEach((index) => {
-        const { x, y } = points[index];
-        ctx.lineTo(x, y);
-    });
-    ctx.closePath();
-    ctx.fill();
-
-    container.append(maskCanvas);
-}
-
-function createDetectionsCanvas(image) {
-    const container = document.querySelector("#photo--input--container");
-    const detectionsCanvas = faceapi.createCanvasFromMedia(image);
-    detectionsCanvas.id = "detections--canvas";
-    container.append(detectionsCanvas);
-
-    return detectionsCanvas;
 }

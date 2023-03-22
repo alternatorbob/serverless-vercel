@@ -22,6 +22,7 @@ export async function inPaint(canvas64, mask64, prompt, progressCB) {
         if (data.status === "succeeded") {
             succeeded = true;
             output = data.output[0];
+
             break;
         } else {
             progressCB(data.logs);
