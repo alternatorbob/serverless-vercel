@@ -18,13 +18,15 @@ export default async (req, res) => {
 
     // const base64 = await readAsDataURL(data.files.image);
 
-    const { prompt, image, mask } = data.fields;
+    // const { prompt, image, mask } = ;
 
-    const input = {
-        prompt,
-        init_image: image,
-        mask,
-    };
+    // const input = {
+    //     prompt,
+    //     init_image: image,
+    //     mask,
+    // };
+
+    console.log(data.fields);
 
     const response = await fetch(`${API_HOST}/v1/predictions`, {
         method: "POST",
@@ -34,7 +36,7 @@ export default async (req, res) => {
         },
 
         body: JSON.stringify({
-            input,
+            input: data.fields,
             version:
                 "be04660a5b93ef2aff61e3668dedb4cbeb14941e62a3fd5998364a32d613e35e",
         }),

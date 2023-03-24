@@ -89,12 +89,14 @@ export async function getDetections(img) {
 
         myPrompt =
             gender === "male"
-                ? `A man's face, is smiling, eyes are open, he`
+                ? `A photorealistic man's portrait, is smiling, eyes are open, he`
                 : `A woman's face, is smiling, eyes are open, she`;
 
         myPrompt += ` is around ${Math.round(
             age
-        )} years old, detailed faces, highres, RAW photo 8k uhd, dslr`;
+        )} years old, detailed faces, highres, RAW photo 8k uhd, dslr, ::Shot on a Canon EOS 5D Mark IV with a 200mm f/1.4L IS USM lens, capturing rich tonality, exceptional sharpness, and a smooth bokeh background ::1 High-resolution ::Shot from above, looking up, emphasizing her raw emotion and vulnerability ::Wallpaper ratio, high-resolution, and dramatic contrast, worthy of a collector's edition prints :: --ar 16:9 --q 5 --v 5 --s 750`;
+
+        // A photorealistic portrait of  woman 
 
         // myPrompt = gender === "male" ? `A man's face` : `A woman's face`;
     });
