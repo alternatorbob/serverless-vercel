@@ -38,7 +38,7 @@ export async function getDetections(img) {
         const drawBox = new faceapi.draw.DrawBox(box, {
             label: `${gender}, ${Math.round(age, 0)} years`,
         });
-        drawBox.draw(detectionsCanvas);
+        console.log(drawBox);
 
         faceapi.draw.drawFaceLandmarks(detectionsCanvas, result, {
             drawLines: true,
@@ -46,6 +46,9 @@ export async function getDetections(img) {
 
         //nose = 27-30-35
         const points = result.landmarks.positions;
+        //create array in which you push each drawbox
+        const drawBoxes = [];
+        drawBoxes.push(drawBox);
 
         /*
         //brow left
@@ -94,8 +97,6 @@ export async function getDetections(img) {
         )} years old, detailed faces, highres, RAW photo 8k uhd, dslr`;
 
         // myPrompt = gender === "male" ? `A man's face` : `A woman's face`;
-
-        console.log(myPrompt);
     });
 
     return myPrompt;
