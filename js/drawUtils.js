@@ -94,7 +94,7 @@ export function createMaskCanvas(img, points) {
     container.append(maskCanvas);
 }
 
-export function cropToSquare(canvas){
+export function cropToSquare(canvas) {
     const ctx = canvas.getContext("2d");
     const { width, height } = canvas;
     const size = Math.min(width, height);

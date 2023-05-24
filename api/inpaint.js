@@ -36,7 +36,7 @@ export default async (req, res) => {
         body: JSON.stringify({
             input,
             version:
-                "be04660a5b93ef2aff61e3668dedb4cbeb14941e62a3fd5998364a32d613e35e",
+                "c28b92a7ecd66eee4aefcd8a94eb9e7f6c3805d5f06038165407fb5cb355ba67",
         }),
     });
 
